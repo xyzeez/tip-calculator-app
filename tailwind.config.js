@@ -12,6 +12,7 @@ export default {
         600: 'hsl(172, 67%, 45%)',
       },
       white: 'hsl(0, 0%, 100%)',
+      red: 'hsl(0, 84%, 60%)',
     },
     fontFamily: { mono: ['Space Mono', 'monospace'] },
     extend: {},

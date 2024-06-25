@@ -25,9 +25,9 @@ const formReducer = createSlice({
   },
 });
 
+const store = configureStore({ reducer: { form: formReducer.reducer } });
+
 export const { setBill, setNumOfPeople, setTip, resetForm } =
   formReducer.actions;
-
-const store = configureStore({ reducer: { form: formReducer.reducer } });
 
 export default store;

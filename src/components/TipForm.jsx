@@ -1,8 +1,5 @@
 import { useRef, useReducer } from 'react';
 
-const tipStyle =
-  'text-center text-2xl flex items-center justify-center shrink-0 grow basis-[9rem] rounded bg-cyan-500 text-white';
-
 const initialState = {
   bill: '',
   numOfPeople: '',
@@ -33,6 +30,9 @@ const TipForm = () => {
   const peopleIsValid = !numOfPeople || numOfPeople > 0;
   const tipIsValid = tip >= 0;
 
+  const tipStyle =
+    'text-center text-2xl flex items-center justify-center shrink-0 grow basis-[9rem] rounded bg-cyan-500 text-white';
+
   const handleFocus = () => {
     customTipInputRef.current.checked = true;
   };
@@ -52,7 +52,7 @@ const TipForm = () => {
   };
 
   return (
-    <form className="flex flex-col gap-y-8 font-bold">
+    <form className="flex flex-col gap-y-8 px-2 font-bold">
       <div className="grid grid-rows-[auto_1fr] grid-cols-[auto_1fr] gap-y-2">
         <label className="text-cyan-300" htmlFor="bill">
           Bill

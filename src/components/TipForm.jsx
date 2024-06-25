@@ -1,17 +1,37 @@
-import { useRef, useState } from 'react';
+import { useRef, useReducer } from 'react';
 
 const tipStyle =
   'text-center text-2xl flex items-center justify-center shrink-0 grow basis-[9rem] rounded bg-cyan-500 text-white';
 
+const initialState = {
+  bill: '',
+  numOfPeople: '',
+  tip: 5,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'bill/set':
+      return { ...state, bill: action.payload };
+    case 'numOfPeople/set':
+      return { ...state, numOfPeople: action.payload };
+    case 'tip/set':
+      return { ...state, tip: action.payload };
+    default:
+      return state;
+  }
+};
+
 const TipForm = () => {
   const customTipInputRef = useRef(null);
   const defaultTipInputRef = useRef(null);
-  const [bill, setBill] = useState('');
-  const [numOfPeople, setNumOfPeople] = useState('');
-  const [tip, setTip] = useState(5);
+  const [{ bill, numOfPeople, tip }, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
   const billIsValid = !bill || bill > 0;
   const peopleIsValid = !numOfPeople || numOfPeople > 0;
-  const tipIsValid = tip < 0;
+  const tipIsValid = tip >= 0;
 
   const handleFocus = () => {
     customTipInputRef.current.checked = true;
@@ -19,15 +39,16 @@ const TipForm = () => {
 
   const handleTip = (value) => {
     if (!value) {
-      setTip(5);
+      dispatch({ type: 'tip/set', payload: 5 });
       return;
     }
 
-    setTip(value);
+    dispatch({ type: 'tip/set', payload: value });
   };
 
   const handleCustomTip = (e) => {
     if (!e.target.value) defaultTipInputRef.current.checked = true;
+    handleTip(e.target.value);
   };
 
   return (
@@ -39,14 +60,16 @@ const TipForm = () => {
         <div
           className={`col-span-2 rounded overflow-hidden border ${
             billIsValid ? 'border-[transparent]' : 'border-red'
-          } focus-within:border-cyan-600 relative after:absolute after:top-2 after:left-4 after:h-[calc(100%-1rem)] after:w-3 after:bg-[url('/icon-dollar.svg')] after:bg-no-repeat after:bg-center`}>
+          } focus-within:border-cyan-600 relative after:absolute after:top-2 after:left-4 after:h-[calc(100%-1rem)] after:w-3 after:bg-[url("/icon-dollar.svg")] after:bg-no-repeat after:bg-center`}>
           <input
             id="bill"
             type="text"
             placeholder="0"
             className="w-full bg-cyan-100 text-cyan-500 placeholder:text-cyan-300 px-4 py-2 text-2xl text-right outline-none"
             value={bill}
-            onChange={(e) => setBill(e.target.value)}
+            onChange={(e) =>
+              dispatch({ type: 'bill/set', payload: e.target.value })
+            }
           />
         </div>
         {!billIsValid && (
@@ -60,73 +83,24 @@ const TipForm = () => {
           Select tip %
         </p>
         <div className="col-span-2 w-full flex flex-row flex-wrap gap-x-4 gap-y-4">
-          <label
-            htmlFor="tip-1"
-            className={`${tipStyle} has-[:checked]:bg-cyan-600 py-2 has-[:checked]:text-cyan-500`}>
-            <input
-              ref={defaultTipInputRef}
-              id="tip-1"
-              type="radio"
-              name="tip"
-              value={5}
-              defaultChecked
-              className="hidden"
-              onChange={(e) => handleTip(e.target.value)}
-            />
-            <span>5%</span>
-          </label>
-          <label
-            htmlFor="tip-2"
-            className={`${tipStyle} has-[:checked]:bg-cyan-600 py-2 has-[:checked]:text-cyan-500`}>
-            <input
-              id="tip-2"
-              type="radio"
-              name="tip"
-              value={10}
-              className="hidden"
-              onChange={(e) => handleTip(e.target.value)}
-            />
-            <span>10%</span>
-          </label>
-          <label
-            htmlFor="tip-3"
-            className={`${tipStyle} has-[:checked]:bg-cyan-600 py-2 has-[:checked]:text-cyan-500`}>
-            <input
-              id="tip-3"
-              type="radio"
-              name="tip"
-              value={15}
-              className="hidden"
-              onChange={(e) => handleTip(e.target.value)}
-            />
-            <span>15%</span>
-          </label>
-          <label
-            htmlFor="tip-4"
-            className={`${tipStyle} has-[:checked]:bg-cyan-600 py-2 has-[:checked]:text-cyan-500`}>
-            <input
-              id="tip-4"
-              type="radio"
-              name="tip"
-              value={20}
-              className="hidden"
-              onChange={(e) => handleTip(e.target.value)}
-            />
-            <span>20%</span>
-          </label>
-          <label
-            htmlFor="tip-5"
-            className={`${tipStyle} has-[:checked]:bg-cyan-600 py-2 has-[:checked]:text-cyan-500`}>
-            <input
-              id="tip-5"
-              type="radio"
-              name="tip"
-              value={25}
-              className="hidden"
-              onChange={(e) => handleTip(e.target.value)}
-            />
-            <span>25%</span>
-          </label>
+          {[5, 10, 15, 20, 25].map((tipValue) => (
+            <label
+              key={tipValue}
+              htmlFor={`tip-${tipValue}`}
+              className={`${tipStyle} has-[:checked]:bg-cyan-600 py-2 has-[:checked]:text-cyan-500`}>
+              <input
+                ref={tipValue === 5 ? defaultTipInputRef : null}
+                id={`tip-${tipValue}`}
+                type="radio"
+                name="tip"
+                value={tipValue}
+                defaultChecked={tipValue === 5}
+                className="hidden"
+                onChange={(e) => handleTip(e.target.value)}
+              />
+              <span>{tipValue}%</span>
+            </label>
+          ))}
           <input
             ref={customTipInputRef}
             id=""
@@ -138,20 +112,19 @@ const TipForm = () => {
             onFocus={handleFocus}
             htmlFor=""
             className={`text-center text-2xl flex items-center justify-center shrink-0 grow basis-[9rem] rounded bg-cyan-200 border ${
-              tip ? 'border-[transparent]' : 'border-red'
+              tipIsValid ? 'border-[transparent]' : 'border-red'
             } focus-within:border-cyan-600`}>
             <input
               id=""
               type="text"
               name="tip"
               placeholder="custom"
-              className={`w-full text-center text-cyan-500 placeholder:text-cyan-500 p-2 h-full bg-[transparent] outline-none `}
-              onChange={(e) => handleTip(e.target.value)}
+              className="w-full text-center text-cyan-500 placeholder:text-cyan-500 p-2 h-full bg-[transparent] outline-none"
               onBlur={handleCustomTip}
             />
           </label>
         </div>
-        {tipIsValid && (
+        {!tipIsValid && (
           <p className=" col-[2/3] row-[1/2] text-right text-red">
             Must be valid
           </p>
@@ -164,14 +137,16 @@ const TipForm = () => {
         <div
           className={`col-span-2 rounded overflow-hidden border ${
             peopleIsValid ? 'border-[transparent]' : 'border-red'
-          } focus-within:border-cyan-600 relative after:absolute after:top-2 after:left-4 after:h-[calc(100%-1rem)] after:w-3 after:bg-[url('/icon-person.svg')] after:bg-no-repeat after:bg-center`}>
+          } focus-within:border-cyan-600 relative after:absolute after:top-2 after:left-4 after:h-[calc(100%-1rem)] after:w-3 after:bg-[url("/icon-person.svg")] after:bg-no-repeat after:bg-center`}>
           <input
             id="people"
             type="text"
             placeholder="0"
             className="w-full bg-cyan-100 text-cyan-500 placeholder:text-cyan-300 px-4 py-2 text-2xl text-right outline-none"
             value={numOfPeople}
-            onChange={(e) => setNumOfPeople(e.target.value)}
+            onChange={(e) =>
+              dispatch({ type: 'numOfPeople/set', payload: e.target.value })
+            }
           />
         </div>
         {!peopleIsValid && (

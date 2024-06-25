@@ -1,34 +1,14 @@
-import { useRef, useReducer } from 'react';
-
-const initialState = {
-  bill: '',
-  numOfPeople: '',
-  tip: 5,
-  customTipSelected: false,
-};
-
-const reducer = (state, action) => {
-  switch (action.type) {
-    case 'bill/set':
-      return { ...state, bill: action.payload };
-    case 'numOfPeople/set':
-      return { ...state, numOfPeople: action.payload };
-    case 'tip/set':
-      return { ...state, tip: action.payload };
-    case 'customTipSelected/set':
-      return { ...state, customTipSelected: action.payload };
-    default:
-      return state;
-  }
-};
+import { useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setBill, setNumOfPeople, setTip } from '../store';
 
 const TipForm = () => {
+  const dispatch = useDispatch();
   const customTipInputRef = useRef(null);
   const defaultTipInputRef = useRef(null);
-  const [{ bill, numOfPeople, tip, customTipSelected }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const { bill, numOfPeople, tip } = useSelector((store) => store.form);
+  const [customTipSelected, setCustomTipSelected] = useState(false);
+
   const billIsValid = !bill || bill > 0;
   const peopleIsValid = !numOfPeople || numOfPeople > 0;
   const tipIsValid = tip >= 0;
@@ -41,16 +21,16 @@ const TipForm = () => {
   };
 
   const handleTip = (e) => {
-    if (!e.arget.value) {
-      dispatch({ type: 'tip/set', payload: 5 });
+    if (!e.target.value) {
+      dispatch(setTip(5));
       return;
     }
 
     e.target.id === 'tip-custom'
-      ? dispatch({ type: 'customTipSelected/set', payload: true })
-      : dispatch({ type: 'customTipSelected/set', payload: false });
+      ? setCustomTipSelected(true)
+      : setCustomTipSelected(false);
 
-    dispatch({ type: 'tip/set', payload: e.target.value });
+    dispatch(setTip(e.target.value));
   };
 
   const handleCustomTip = (e) => {
@@ -74,9 +54,7 @@ const TipForm = () => {
             placeholder="0"
             className="w-full bg-cyan-100 text-cyan-500 placeholder:text-cyan-300 px-4 py-2 text-2xl text-right outline-none transition ease-in"
             value={bill}
-            onChange={(e) =>
-              dispatch({ type: 'bill/set', payload: e.target.value })
-            }
+            onChange={(e) => dispatch(setBill(e.target.value))}
           />
         </div>
         {!billIsValid && (
@@ -155,9 +133,7 @@ const TipForm = () => {
             placeholder="0"
             className="w-full bg-cyan-100 text-cyan-500 placeholder:text-cyan-300 px-4 py-2 text-2xl text-right outline-none transition ease-in"
             value={numOfPeople}
-            onChange={(e) =>
-              dispatch({ type: 'numOfPeople/set', payload: e.target.value })
-            }
+            onChange={(e) => dispatch(setNumOfPeople(e.target.value))}
           />
         </div>
         {!peopleIsValid && (

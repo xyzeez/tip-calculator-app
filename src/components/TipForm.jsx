@@ -4,6 +4,7 @@ const initialState = {
   bill: '',
   numOfPeople: '',
   tip: 5,
+  customTipSelected: false,
 };
 
 const reducer = (state, action) => {
@@ -14,6 +15,8 @@ const reducer = (state, action) => {
       return { ...state, numOfPeople: action.payload };
     case 'tip/set':
       return { ...state, tip: action.payload };
+    case 'customTipSelected/set':
+      return { ...state, customTipSelected: action.payload };
     default:
       return state;
   }
@@ -22,7 +25,7 @@ const reducer = (state, action) => {
 const TipForm = () => {
   const customTipInputRef = useRef(null);
   const defaultTipInputRef = useRef(null);
-  const [{ bill, numOfPeople, tip }, dispatch] = useReducer(
+  const [{ bill, numOfPeople, tip, customTipSelected }, dispatch] = useReducer(
     reducer,
     initialState
   );
@@ -37,18 +40,22 @@ const TipForm = () => {
     customTipInputRef.current.checked = true;
   };
 
-  const handleTip = (value) => {
-    if (!value) {
+  const handleTip = (e) => {
+    if (!e.arget.value) {
       dispatch({ type: 'tip/set', payload: 5 });
       return;
     }
 
-    dispatch({ type: 'tip/set', payload: value });
+    e.target.id === 'tip-custom'
+      ? dispatch({ type: 'customTipSelected/set', payload: true })
+      : dispatch({ type: 'customTipSelected/set', payload: false });
+
+    dispatch({ type: 'tip/set', payload: e.target.value });
   };
 
   const handleCustomTip = (e) => {
     if (!e.target.value) defaultTipInputRef.current.checked = true;
-    handleTip(e.target.value);
+    handleTip(e);
   };
 
   return (
@@ -96,7 +103,7 @@ const TipForm = () => {
                 value={tipValue}
                 defaultChecked={tipValue === 5}
                 className="hidden"
-                onChange={(e) => handleTip(e.target.value)}
+                onChange={(e) => handleTip(e)}
               />
               <span>{tipValue}%</span>
             </label>
@@ -110,12 +117,16 @@ const TipForm = () => {
           />
           <label
             onFocus={handleFocus}
-            htmlFor=""
+            htmlFor="tip-custom"
             className={`text-center text-2xl flex items-center justify-center shrink-0 grow basis-[9rem] rounded bg-cyan-200 border ${
-              tipIsValid ? 'border-[transparent]' : 'border-red'
+              customTipSelected
+                ? tipIsValid
+                  ? 'border-cyan-600'
+                  : 'border-red'
+                : 'border-[transparent]'
             } focus-within:border-cyan-600`}>
             <input
-              id=""
+              id="tip-custom"
               type="text"
               name="tip"
               placeholder="Custom"

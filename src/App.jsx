@@ -7,9 +7,9 @@ const App = () => {
   return (
     <div className="bg-cyan-200 min-h-screen grid grid-rows-[auto_1fr]">
       <Logo />
-      <main className="flex flex-col font-mono font-bold p-8 rounded-t-3xl bg-white">
+      <main className="flex flex-col gap-8 font-mono font-bold p-6 rounded-t-3xl bg-white">
         <TipForm />
-        {/* <TipBoard /> */}
+        <TipBoard />
       </main>
     </div>
   );

@@ -4,8 +4,9 @@ import { setBill, setNumOfPeople, setTip } from '../store';
 
 const TipForm = () => {
   const dispatch = useDispatch();
+  const customTipRadioRef = useRef(null);
+  const defaultTipRadioRef = useRef(null);
   const customTipInputRef = useRef(null);
-  const defaultTipInputRef = useRef(null);
   const { bill, numOfPeople, tip } = useSelector((store) => store.form);
   const [customTipSelected, setCustomTipSelected] = useState(false);
 
@@ -17,7 +18,7 @@ const TipForm = () => {
     'text-center text-2xl lg:text-xl flex items-center justify-center shrink-0 grow basis-[9rem] lg:basis-[5rem] rounded bg-cyan-500 text-white';
 
   const handleFocus = () => {
-    customTipInputRef.current.checked = true;
+    customTipRadioRef.current.checked = true;
   };
 
   const handleTip = (e) => {
@@ -34,12 +35,13 @@ const TipForm = () => {
   };
 
   const handleCustomTip = (e) => {
-    if (!e.target.value) defaultTipInputRef.current.checked = true;
+    if (!e.target.value) defaultTipRadioRef.current.checked = true;
     handleTip(e);
   };
 
   return (
     <form className="flex flex-col gap-y-8 lg:gap-y-6 px-2 lg:pl-4 lg:py-4 font-bold">
+      <h2 className="sr-only">Fill the form to split the bill:</h2>
       <div className="grid grid-rows-[auto_1fr] grid-cols-[auto_1fr] gap-y-2">
         <label className="text-cyan-300" htmlFor="bill">
           Bill
@@ -64,9 +66,7 @@ const TipForm = () => {
         )}
       </div>
       <div className="grid grid-rows-[auto_1fr] grid-cols-[auto_1fr] gap-y-4">
-        <p className="text-cyan-300" htmlFor="">
-          Select tip %
-        </p>
+        <p className="text-cyan-300">Select tip %</p>
         <div className="col-span-2 w-full flex flex-row flex-wrap gap-x-4 gap-y-4">
           {[5, 10, 15, 20, 25].map((tipValue) => (
             <label
@@ -74,24 +74,24 @@ const TipForm = () => {
               htmlFor={`tip-${tipValue}`}
               className={`${tipBtnStyle} has-[:checked]:bg-cyan-600 py-2 has-[:checked]:text-cyan-500 cursor-pointer hover:[&:not(:has(:checked))]:bg-cyan-200 hover:[&:not(:has(:checked))]:text-cyan-500 transition ease-in`}>
               <input
-                ref={tipValue === 5 ? defaultTipInputRef : null}
+                ref={tipValue === 5 ? defaultTipRadioRef : null}
                 id={`tip-${tipValue}`}
                 type="radio"
                 name="tip"
                 value={tipValue}
                 defaultChecked={tipValue === 5}
-                className="hidden"
+                className="sr-only"
                 onChange={(e) => handleTip(e)}
               />
               <span>{tipValue}%</span>
             </label>
           ))}
           <input
-            ref={customTipInputRef}
-            id=""
+            ref={customTipRadioRef}
             type="radio"
             name="tip"
-            className="hidden"
+            className="sr-only"
+            onChange={() => customTipInputRef.current.focus()}
           />
           <label
             onFocus={handleFocus}
@@ -104,6 +104,7 @@ const TipForm = () => {
                 : 'border-[transparent]'
             } focus-within:border-cyan-600`}>
             <input
+              ref={customTipInputRef}
               id="tip-custom"
               type="text"
               name="tip"

@@ -90,6 +90,7 @@ const TipForm = () => {
             ref={customTipRadioRef}
             type="radio"
             name="tip"
+            aria-label="custom"
             className="sr-only"
             onChange={() => customTipInputRef.current.focus()}
           />
@@ -103,6 +104,7 @@ const TipForm = () => {
                   : 'border-red'
                 : 'border-[transparent]'
             } focus-within:border-cyan-600`}>
+            <span className="sr-only">Input custom tip:</span>
             <input
               ref={customTipInputRef}
               id="tip-custom"

@@ -13,8 +13,8 @@ const TipForm = () => {
   const peopleIsValid = !numOfPeople || numOfPeople > 0;
   const tipIsValid = tip >= 0;
 
-  const tipStyle =
-    'text-center text-2xl flex items-center justify-center shrink-0 grow basis-[9rem] rounded bg-cyan-500 text-white';
+  const tipBtnStyle =
+    'text-center text-2xl lg:text-xl flex items-center justify-center shrink-0 grow basis-[9rem] lg:basis-[5rem] rounded bg-cyan-500 text-white';
 
   const handleFocus = () => {
     customTipInputRef.current.checked = true;
@@ -39,7 +39,7 @@ const TipForm = () => {
   };
 
   return (
-    <form className="flex flex-col gap-y-8 px-2 font-bold">
+    <form className="flex flex-col gap-y-8 lg:gap-y-6 px-2 lg:pl-4 lg:py-4 font-bold">
       <div className="grid grid-rows-[auto_1fr] grid-cols-[auto_1fr] gap-y-2">
         <label className="text-cyan-300" htmlFor="bill">
           Bill
@@ -72,7 +72,7 @@ const TipForm = () => {
             <label
               key={tipValue}
               htmlFor={`tip-${tipValue}`}
-              className={`${tipStyle} has-[:checked]:bg-cyan-600 py-2 has-[:checked]:text-cyan-500 cursor-pointer hover:[&:not(:has(:checked))]:bg-cyan-200 hover:[&:not(:has(:checked))]:text-cyan-500 transition ease-in`}>
+              className={`${tipBtnStyle} has-[:checked]:bg-cyan-600 py-2 has-[:checked]:text-cyan-500 cursor-pointer hover:[&:not(:has(:checked))]:bg-cyan-200 hover:[&:not(:has(:checked))]:text-cyan-500 transition ease-in`}>
               <input
                 ref={tipValue === 5 ? defaultTipInputRef : null}
                 id={`tip-${tipValue}`}
@@ -96,7 +96,7 @@ const TipForm = () => {
           <label
             onFocus={handleFocus}
             htmlFor="tip-custom"
-            className={`text-center text-2xl flex items-center justify-center shrink-0 grow basis-[9rem] rounded bg-cyan-200 border ${
+            className={`text-center text-2xl lg:text-xl flex items-center justify-center shrink-0 grow basis-[9rem] lg:basis-[5rem] rounded bg-cyan-200 border ${
               customTipSelected
                 ? tipIsValid
                   ? 'border-cyan-600'
@@ -108,7 +108,7 @@ const TipForm = () => {
               type="text"
               name="tip"
               placeholder="Custom"
-              className="w-full text-right text-cyan-500 placeholder:text-cyan-500 placeholder:text-center p-2 h-full bg-[transparent] outline-none"
+              className="w-full text-right text-cyan-500 placeholder:text-cyan-500 placeholder:text-center p-2 lg:py-0 h-full bg-[transparent] outline-none"
               onBlur={handleCustomTip}
             />
           </label>

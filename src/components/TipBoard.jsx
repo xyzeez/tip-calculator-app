@@ -27,7 +27,7 @@ const TipBoard = () => {
           <p className="text-3xl text-cyan-600">$0.00</p>
         </div>
       </div>
-      <button className="w-full text-center text-xl rounded bg-cyan-600 text-cyan-500 py-2">
+      <button className="w-full text-center text-xl rounded bg-cyan-600 text-cyan-500 py-2 cursor-pointer hover:bg-cyan-200 transition ease-in">
         RESET
       </button>
     </section>

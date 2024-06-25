@@ -65,7 +65,7 @@ const TipForm = () => {
             id="bill"
             type="text"
             placeholder="0"
-            className="w-full bg-cyan-100 text-cyan-500 placeholder:text-cyan-300 px-4 py-2 text-2xl text-right outline-none"
+            className="w-full bg-cyan-100 text-cyan-500 placeholder:text-cyan-300 px-4 py-2 text-2xl text-right outline-none transition ease-in"
             value={bill}
             onChange={(e) =>
               dispatch({ type: 'bill/set', payload: e.target.value })
@@ -87,7 +87,7 @@ const TipForm = () => {
             <label
               key={tipValue}
               htmlFor={`tip-${tipValue}`}
-              className={`${tipStyle} has-[:checked]:bg-cyan-600 py-2 has-[:checked]:text-cyan-500`}>
+              className={`${tipStyle} has-[:checked]:bg-cyan-600 py-2 has-[:checked]:text-cyan-500 cursor-pointer hover:[&:not(:has(:checked))]:bg-cyan-200 hover:[&:not(:has(:checked))]:text-cyan-500 transition ease-in`}>
               <input
                 ref={tipValue === 5 ? defaultTipInputRef : null}
                 id={`tip-${tipValue}`}
@@ -118,8 +118,8 @@ const TipForm = () => {
               id=""
               type="text"
               name="tip"
-              placeholder="custom"
-              className="w-full text-center text-cyan-500 placeholder:text-cyan-500 p-2 h-full bg-[transparent] outline-none"
+              placeholder="Custom"
+              className="w-full text-right text-cyan-500 placeholder:text-cyan-500 placeholder:text-center p-2 h-full bg-[transparent] outline-none"
               onBlur={handleCustomTip}
             />
           </label>
@@ -142,7 +142,7 @@ const TipForm = () => {
             id="people"
             type="text"
             placeholder="0"
-            className="w-full bg-cyan-100 text-cyan-500 placeholder:text-cyan-300 px-4 py-2 text-2xl text-right outline-none"
+            className="w-full bg-cyan-100 text-cyan-500 placeholder:text-cyan-300 px-4 py-2 text-2xl text-right outline-none transition ease-in"
             value={numOfPeople}
             onChange={(e) =>
               dispatch({ type: 'numOfPeople/set', payload: e.target.value })
